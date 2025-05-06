@@ -30,8 +30,8 @@ export const RoundImageContainer: FC<RoundImageContainerProps> = ({
   source,
   circleWidth = 100,
   backgroundColor = Utills.selectedThemeColors().Base,
-  borderRadius = null,
-  borderColor = Utills.selectedThemeColors().Primary,
+  borderRadius = 100,
+  borderColor = Utills.selectedThemeColors().Base,
   borderWidth = StyleSheet.hairlineWidth,
   styles = {},
   customContainerStyle = {},
@@ -40,7 +40,7 @@ export const RoundImageContainer: FC<RoundImageContainerProps> = ({
   defaultSource,
   isEdit = false,
   PressPencil,
-  resizeMode = 'cover',
+  resizeMode = 'contain',
 }) => {
   return (
     <View
@@ -68,30 +68,6 @@ export const RoundImageContainer: FC<RoundImageContainerProps> = ({
           imageStyles={imageStyle}
         />
       </View>
-      {/* {isEdit && (
-        <TouchableOpacity
-          style={{
-            position: 'absolute',
-            top: 8,
-            right: 0,
-            width: Metrix.VerticalSize(25),
-            height: Metrix.VerticalSize(25),
-            backgroundColor: '#ffffff',
-            alignItems: 'center',
-            justifyContent: 'center',
-            borderRadius: Metrix.HorizontalSize(circleWidth / 2),
-          }}
-          onPress={PressPencil}>
-          <Image
-            source={Images.Pencil}
-            style={{
-              tintColor: Utills.selectedThemeColors().Primary,
-              width: '60%',
-              height: '60%',
-            }}
-          />
-        </TouchableOpacity>
-      )} */}
     </View>
   );
 };

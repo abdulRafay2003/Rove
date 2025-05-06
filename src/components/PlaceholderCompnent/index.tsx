@@ -14,15 +14,15 @@ import {MainContainer} from '../MainContainer';
 import {PrimaryButton, PrimaryButtonProps} from '../PrimaryButton';
 import {Colors, Metrix, Utills} from '../../config';
 import {CustomText, FadeContainer} from '..';
-import {MultipleHeadingComponentProps} from '../MultipleHeadingComponent';
 
-type PlaceholderComponentProps = PrimaryButtonProps &
-  MultipleHeadingComponentProps & {
-    image: ImageProps['source'];
-    imageStyle?: ImageProps['style'];
-    bottomBtnText?: string;
-    onBottombtnPress?: () => void;
-  };
+type PlaceholderComponentProps = PrimaryButtonProps & {
+  heading?: string;
+  subHeading?: string;
+  image: ImageProps['source'];
+  imageStyle?: ImageProps['style'];
+  bottomBtnText?: string;
+  onBottombtnPress?: () => void;
+};
 
 export const PlaceholderComponent: React.FC<PlaceholderComponentProps> = ({
   heading,
@@ -48,7 +48,7 @@ export const PlaceholderComponent: React.FC<PlaceholderComponentProps> = ({
               styles.textStyle,
               {
                 marginTop: Metrix.VerticalSize(50),
-                color: Utills.selectedThemeColors().Primary,
+                color: Utills.selectedThemeColors().PrimaryTextColor,
               },
             ]}>
             {heading}
@@ -76,7 +76,7 @@ export const PlaceholderComponent: React.FC<PlaceholderComponentProps> = ({
               <CustomText.MediumText
                 customStyle={{
                   textAlign: 'center',
-                  color: Utills.selectedThemeColors().Primary,
+                  color: Utills.selectedThemeColors().PrimaryTextColor,
                   marginTop: Metrix.VerticalSize(20),
                 }}>
                 {bottomBtnText}

@@ -20,7 +20,7 @@ export type PrimaryButtonProps = TouchableOpacityProps & {
   color?: string;
   textColor?: string;
   customStyles?: StyleProp<ViewStyle>;
-  fontSize?: any;
+  customTextStyle?: any;
 };
 
 export const PrimaryButton: FC<PrimaryButtonProps> = ({
@@ -29,13 +29,12 @@ export const PrimaryButton: FC<PrimaryButtonProps> = ({
   isLoading,
   disabled,
   width = '100%',
-  color = Utills.selectedThemeColors().Primary,
-  textColor = Utills.selectedThemeColors().Secondary,
+  color = Utills.selectedThemeColors().PrimaryTextColor,
+  textColor = Utills.selectedThemeColors().Base,
   customStyles,
-  fontSize = FontType.FontMedium,
+  customTextStyle,
   ...rest
 }) => {
-  // console.log('curreennntntntntnt', Utills.selectedThemeColors());
   return (
     <TouchableOpacity
       onPress={onPress}
@@ -55,35 +54,30 @@ export const PrimaryButton: FC<PrimaryButtonProps> = ({
       {isLoading ? (
         <ActivityIndicator color={textColor} />
       ) : (
-        <CustomText.LargeSemiBoldText
-          customStyle={{
-            color: textColor,
-            fontSize: fontSize,
-            fontWeight: '700',
-          }}>
+        <CustomText.MediumText
+          customStyle={[
+            {
+              color: textColor,
+              fontSize: FontType.FontMedium,
+              fontWeight: '700',
+            },
+            customTextStyle,
+          ]}>
           {title}
-        </CustomText.LargeSemiBoldText>
-        // <Text style={{ color: textColor }}>{title}</Text>
+        </CustomText.MediumText>
       )}
     </TouchableOpacity>
   );
 };
 
-// console.log('dadadadadada', );
 const styles = StyleSheet.create({
   buttonContainer: {
-    height: Metrix.VerticalSize(40),
+    height: Metrix.VerticalSize(45),
     justifyContent: 'center',
     alignItems: 'center',
-    borderRadius: Metrix.VerticalSize(5),
+    borderRadius: Metrix.VerticalSize(10),
     marginVertical: Metrix.VerticalSize(10),
     // backgroundColor: selectedTheme(Utills.currentThemeColors()).Primary,
-    // backgroundColor: Utills.selectedThemeColors().Primary,
     // ...Metrix.createShadow(),
   },
-  // titleText:{
-  //   fontFamily: Fonts['Futura-Medium'],
-  //   fontSize: Metrix.customFontSize(16),
-  //   color: Utills.selectedThemeColors().Primary,
-  // }
 });

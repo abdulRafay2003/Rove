@@ -5,11 +5,11 @@
  * @format
  */
 import 'react-native-gesture-handler';
-import React, {useEffect, JSX} from 'react';
+import React, {useEffect} from 'react';
 import type {PropsWithChildren} from 'react';
 import {StyleSheet} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
-import {NavigationService, Utills} from './src/config';
+import {Metrix, NavigationService, Utills} from './src/config';
 import {MainStack} from './src/stacks/MainStack';
 import Toast, {
   BaseToast,
@@ -17,7 +17,6 @@ import Toast, {
   ToastProps,
 } from 'react-native-toast-message';
 import SplashScreen from 'react-native-splash-screen';
-import changeNavigationBarColor from 'react-native-navigation-bar-color';
 import './src/i18n';
 
 function App(): JSX.Element {
@@ -26,8 +25,9 @@ function App(): JSX.Element {
       <BaseToast
         {...props}
         style={{
-          borderLeftColor: Utills.selectedThemeColors().Primary,
-          width: '80%',
+          borderLeftColor: Utills.selectedThemeColors().BlackOpacity('0.7'),
+          borderRadius: Metrix.HorizontalSize(10),
+          width: '90%',
         }}
         text1Style={{
           fontSize: 14,
@@ -46,6 +46,7 @@ function App(): JSX.Element {
           borderLeftColor: 'lightgreen',
           width: '80%',
           borderLeftWidth: 6,
+          // ...Metrix.createShadow,
         }}
         text1Style={{
           fontSize: 14,
@@ -75,20 +76,7 @@ function App(): JSX.Element {
     ),
   };
 
-  const changeBottomBtnBarColor = async () => {
-    try {
-      const response = await changeNavigationBarColor(
-        Utills.selectedThemeColors().Base,
-        true,
-      );
-      console.log(response); // {success: true}
-    } catch (e) {
-      console.log(e); // {success: false}
-    }
-  };
-
   useEffect(() => {
-    changeBottomBtnBarColor();
     SplashScreen.hide();
   }, []);
 
@@ -112,6 +100,11 @@ function App(): JSX.Element {
   );
 }
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  backgroundStyle: {
+    flex: 1,
+    backgroundColor: Utills.selectedThemeColors().Base,
+  },
+});
 
 export default App;

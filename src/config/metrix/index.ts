@@ -72,26 +72,14 @@ export const HorizontalSize = (size: number): number => {
 };
 
 export const createShadow = {
-  shadowColor: Platform.OS == 'android' ? 'black' : 'black',
+  shadowColor: Platform.OS == 'android' ? '#FFFFFF' : '#FFFFFF',
   shadowOffset: {
-    width: HorizontalSize(3),
-    height: VerticalSize(2),
-  },
-  shadowOpacity: 0.2,
-  shadowRadius: 5,
-
-  elevation: VerticalSize(20),
-};
-
-export const cardShadow = {
-  shadowColor: '#000000',
-  shadowOffset: {
-    width: HorizontalSize(0),
-    height: VerticalSize(0),
+    width: HorizontalSize(1),
+    height: VerticalSize(1),
   },
   shadowOpacity: 0.5,
   shadowRadius: 5,
-  elevation: VerticalSize(10),
+  elevation: VerticalSize(20),
 };
 
 export default {
@@ -109,5 +97,4 @@ export default {
   VerticalSize,
   HorizontalSize,
   createShadow,
-  cardShadow,
 };

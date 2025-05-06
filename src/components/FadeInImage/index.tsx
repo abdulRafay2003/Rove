@@ -26,8 +26,10 @@ export const FadeInImage: React.FC<FadeInImageProps> = ({
   resizeMode = 'contain',
   customImageContainerStyle,
   imageStyles,
+  customPlaceholderStyle,
 }) => {
   const [isLoad, setIsLoad] = useState(false);
+
   const fadeAnim = useRef(new Animated.Value(0))?.current;
   useEffect(() => {
     Animated.timing(fadeAnim, {
@@ -39,7 +41,8 @@ export const FadeInImage: React.FC<FadeInImageProps> = ({
 
   return (
     <View style={customImageContainerStyle}>
-      {isLoad && (
+      {/* {isLoad && (
+        
         <LottieAnimatedComponent
           src={require('../../assets/animations/loadingImage.json')}
           customStyle={{
@@ -48,15 +51,18 @@ export const FadeInImage: React.FC<FadeInImageProps> = ({
             position: 'absolute',
             top: 0,
             zIndex: 100,
+            //   alignSelf: "center",
           }}
         />
-      )}
+      )} */}
 
       <Image
         source={source}
         style={[
           {
-            width: '100%',
+            // transform: [{scaleX: I18nManager.isRTL ? -1 : 1}],
+            // opacity: fadeAnim,
+            width: '100%', // Adjust the size as needed
             height: '100%',
           },
           imageStyles,
@@ -64,6 +70,7 @@ export const FadeInImage: React.FC<FadeInImageProps> = ({
         resizeMode={resizeMode}
         onLoadStart={() => setIsLoad(true)}
         onLoadEnd={() => setIsLoad(false)}
+        // onLoad={() => setIsLoad(false)}
       />
     </View>
   );

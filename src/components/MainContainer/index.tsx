@@ -63,7 +63,7 @@ export const MainContainer: React.FC<MainContainerProps> = ({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingHorizontal: Metrix.HorizontalSize(20),
+    paddingHorizontal: Metrix.HorizontalSize(15),
     paddingVertical: Metrix.VerticalSize(20),
     // borderWidth: 1,
     // backgroundColor: 'white',

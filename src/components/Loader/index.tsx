@@ -29,7 +29,7 @@ export const Loader: React.FC<LoaderProps> = ({
             {`Auth : ${checkingAuthActionLoader}`}
             {`Home : ${checkingHomeActionLoader}`}
           </CustomText.MediumText> */}
-          <ActivityIndicator size={size} color={Utills.selectedThemeColors().Primary} />
+          <ActivityIndicator size={size} color={Utills.selectedThemeColors().PrimaryTextColor} />
           {/* <LottieAnimatedComponent speed={1.5} /> */}
         </View>
       </Modal>

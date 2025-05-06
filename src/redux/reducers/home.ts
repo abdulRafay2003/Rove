@@ -4,15 +4,25 @@ import Action from '../actions/Home';
 interface AppState {
   darkMode?: boolean;
   userDetails: any;
-  fcmToken: string;
-  userCity?: string;
+  safeWord?: any;
+  userLocation: any;
+  selectedModel: string;
+  isFirstTime?: boolean;
+  isSafeZone?: boolean;
 }
 
 const initialState: ImmutableObject<AppState> = Immutable<AppState>({
   darkMode: false,
   userDetails: {},
-  fcmToken: '',
-  userCity: '',
+  safeWord: {
+    isSafeWord: true,
+    safeWord: 'Activate',
+  },
+  userLocation: {},
+  selectedModel:
+    'ws://awseb--AWSEB-f4xm0MtNeYRI-371792584.ca-central-1.elb.amazonaws.com/ws/audio',
+  isFirstTime: false,
+  isSafeZone: false,
 });
 
 export default (state = initialState, action: {type: any; payload: any}) => {
@@ -30,14 +40,28 @@ export default (state = initialState, action: {type: any; payload: any}) => {
         userDetails: action.payload,
       });
     }
-    case Action.FCM_TOKEN: {
+
+    case Action.SAFE_WORD: {
       return Immutable(state).merge({
-        fcmToken: action.payload,
+        safeWord: action.payload,
       });
     }
-    case Action.USER_CITY: {
+
+    case Action.USER_LOCATION: {
       return Immutable(state).merge({
-        userCity: action.payload,
+        userLocation: action.payload,
+      });
+    }
+
+    case Action.SELECTED_MODEL: {
+      return Immutable(state).merge({
+        selectedModel: action.payload,
+      });
+    }
+
+    case Action.IN_SAFE_ZONE: {
+      return Immutable(state).merge({
+        isSafeZone: action.payload,
       });
     }
 

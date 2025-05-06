@@ -9,6 +9,8 @@ import {
   ImageProps,
   ViewStyle,
   I18nManager,
+  ImageSourcePropType,
+  ImageStyle,
 } from 'react-native';
 import {CustomText} from '..';
 import {Colors, Fonts, Metrix, Images, FontType, Utills} from '../../config';
@@ -25,8 +27,9 @@ type CustomInputProps = TextInputProps & {
   touched?: boolean;
   inputRef?: Ref<TextInput>;
   heading?: string;
-  mainContainerStyle?: any;
-  editable?: boolean;
+  eyeImg?: ImageSourcePropType;
+  customIconStyle?: ImageStyle;
+  mainContainer?: ViewStyle;
 };
 
 export const CustomInput: FC<CustomInputProps> = ({
@@ -40,48 +43,39 @@ export const CustomInput: FC<CustomInputProps> = ({
   touched,
   inputRef,
   heading,
-  mainContainerStyle,
-  editable = true,
+  eyeImg = Images.EyeAbleIcon,
+  customIconStyle,
+  mainContainer,
   ...rest
 }) => {
   //   const [isFocused, setIsFocused] = useState(false);
   // const {Colors} = useThemeHook();
 
   return (
-    <>
+    <View
+      style={{
+        marginTop: Metrix.VerticalSize(5),
+      }}>
       {heading && (
         <CustomText.RegularText
           customStyle={{
-            // textAlign: I18nManager.forceRTL ? 'left' : 'right',
-            marginLeft: Metrix.HorizontalSize(5),
+            textAlign: I18nManager.forceRTL ? 'left' : 'right',
+            // marginLeft: Metrix.HorizontalSize(10),
             fontSize: Metrix.customFontSize(15),
-            color: Utills.selectedThemeColors().Secondary,
-            fontWeight: '500',
           }}>
           {heading || ''}
         </CustomText.RegularText>
       )}
-      <View
-        style={[
-          styles.textContainer,
-          {
-            backgroundColor:
-              editable == false
-                ? Utills.selectedThemeColors().Grey
-                : Utills.selectedThemeColors().Base,
-          },
-          mainContainerStyle,
-        ]}>
+      <View style={[styles.textContainer, mainContainer]}>
         <TextInput
           // onFocus={() => setIsFocused(true)}
           // onBlur={() => setIsFocused(false)}
-          selectionColor={Utills.selectedThemeColors().Primary}
+          selectionColor={Utills.selectedThemeColors().PrimaryTextColor}
           style={[styles.textInput, customStyle]}
           placeholderTextColor={
             Utills.selectedThemeColors().TextInputPlaceholserColor
           }
           ref={inputRef}
-          editable={editable}
           {...rest}
         />
         {eye && (
@@ -101,10 +95,11 @@ export const CustomInput: FC<CustomInputProps> = ({
               />
             ) : (
               <Image
-                source={Images.EyeAbleIcon}
+                source={eyeImg}
                 style={{
                   width: '45%',
                   height: '45%',
+                  ...customIconStyle,
                 }}
                 resizeMode="contain"
               />
@@ -122,33 +117,33 @@ export const CustomInput: FC<CustomInputProps> = ({
           {error}
         </CustomText.SmallText>
       )}
-    </>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   textContainer: {
-    borderWidth: 1.5,
-    borderRadius: Metrix.VerticalSize(5),
-    height: Metrix.VerticalSize(40),
+    borderWidth: 2,
+    borderRadius: Metrix.VerticalSize(10),
+    height: Metrix.VerticalSize(48),
     width: '100%',
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginVertical: Metrix.VerticalSize(10),
-    backgroundColor: Utills.selectedThemeColors().TextInputBaseColor,
-    borderColor: Utills.selectedThemeColors().SecondaryTextColor,
+    backgroundColor: Utills.selectedThemeColors().Base,
+    borderColor: Utills.selectedThemeColors().TextInputBorderColor,
     alignItems: 'center',
     overflow: 'hidden',
   },
   textInput: {
     color: Utills.selectedThemeColors().PrimaryTextColor,
-    fontSize: Metrix.customFontSize(14),
-    paddingLeft: Metrix.HorizontalSize(15),
+    fontSize: Metrix.customFontSize(16),
+    paddingLeft: Metrix.HorizontalSize(20),
     fontFamily: Fonts['Regular'],
     height: '100%',
     width: '85%',
-    // width: '85%',
-    // textAlign: I18nManager.forceRTL ? 'left' : 'right',
+    // textAlign: I18nManager.forceRTL ? "left" : "right",
+    // borderWidth: 1,
     // backgroundColor: Utills.selectedThemeColors().TextInputBaseColor,
   },
   eyeStyle: {
@@ -156,8 +151,6 @@ const styles = StyleSheet.create({
     height: '100%',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: Utills.selectedThemeColors().TextInputBaseColor,
-    // borderWidth: 1,
-    borderRadius: Metrix.VerticalSize(10),
+    backgroundColor: Utills.selectedThemeColors().Base,
   },
 });

@@ -14,6 +14,7 @@ import {
 import {Metrix, Colors, Fonts, Images, FontType, Utills} from '../../config';
 import {CustomText, RoundImageContainer} from '..';
 import {RoundImageContainerProps} from '../RoundImageContainer';
+import utills from '../../config/utills';
 
 type PrimaryButtonProps = TouchableOpacityProps &
   RoundImageContainerProps & {
@@ -35,7 +36,7 @@ export const SecondaryButton: FC<PrimaryButtonProps> = ({
   disabled,
   width = '100%',
   color = Utills.selectedThemeColors().Base,
-  textColor = '#696969',
+  textColor = utills.selectedThemeColors().PrimaryTextColor,
   customStyles,
   isIcon,
   source,
@@ -48,8 +49,10 @@ export const SecondaryButton: FC<PrimaryButtonProps> = ({
     style={[
       styles.buttonContainer,
       {
-        backgroundColor: disabled ? Utills.selectedThemeColors().TextInputPlaceholserColor : color,
-    // borderColor: Utills.selectedThemeColors().TextInputBorderColor,
+        backgroundColor: disabled
+          ? Utills.selectedThemeColors().TextInputPlaceholserColor
+          : color,
+        // borderColor: Utills.selectedThemeColors().TextInputBorderColor,
         width: width,
       },
       customStyles,
@@ -71,7 +74,6 @@ export const SecondaryButton: FC<PrimaryButtonProps> = ({
         //   marginTop: 3,
         //   alignSelf: 'center',
         // }}
-        borderColor="white"
       />
     )}
 
@@ -85,15 +87,15 @@ export const SecondaryButton: FC<PrimaryButtonProps> = ({
           justifyContent: 'center',
           // borderWidth: 1,
           // borderColor: 'red',
-          width: isIcon? "70%" : '100%',
+          width: '70%',
         }}>
-        <CustomText.LargeSemiBoldText
+        <CustomText.MediumText
           customStyle={{
             color: textColor,
             fontSize: FontType.FontMedium,
           }}>
           {title}
-        </CustomText.LargeSemiBoldText>
+        </CustomText.MediumText>
 
         {/* // <Text style={{ color: textColor }}>{title}</Text> */}
       </View>
@@ -107,7 +109,7 @@ const styles = StyleSheet.create({
     // justifyContent: 'center',
     alignItems: 'center',
     flexDirection: 'row',
-    borderRadius: Metrix.VerticalSize(50),
+    borderRadius: Metrix.VerticalSize(10),
     marginVertical: Metrix.VerticalSize(10),
     borderColor: Utills.selectedThemeColors().TextInputBorderColor,
     borderWidth: 2,
@@ -117,6 +119,5 @@ const styles = StyleSheet.create({
   // titleText:{
   //   fontFamily: Fonts['Futura-Medium'],
   //   fontSize: Metrix.customFontSize(16),
-  //   color: Utills.selectedThemeColors().Primary,
   // }
 });

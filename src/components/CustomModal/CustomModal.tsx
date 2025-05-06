@@ -12,6 +12,7 @@ import {
 } from 'react-native';
 import {Colors, Images, Metrix, Utills} from '../../config';
 import {useThemeHook} from '../../hooks';
+import {CustomText} from '..';
 
 type ModalProps = {
   visible: boolean;
@@ -20,6 +21,10 @@ type ModalProps = {
   childrenViewStyle?: ViewStyle;
   smallModal?: boolean;
   smallContainerStyles?: ViewStyle;
+  title?: string;
+  modalContainer?: ViewStyle;
+  safeAreaStyle?: any;
+  crossBtn?: any;
 };
 
 export const CustomModal: React.FC<ModalProps> = ({
@@ -29,6 +34,10 @@ export const CustomModal: React.FC<ModalProps> = ({
   childrenViewStyle,
   smallModal,
   smallContainerStyles,
+  modalContainer,
+  safeAreaStyle,
+  crossBtn = true,
+  title,
 }) => {
   // const {Colors} = useThemeHook();
 
@@ -37,20 +46,16 @@ export const CustomModal: React.FC<ModalProps> = ({
       visible={visible}
       transparent={true}
       onRequestClose={onClose}
-      animationType={Platform.OS == 'ios' ? 'slide' : 'fade'}>
+      animationType={Platform.OS == 'ios' ? 'fade' : 'fade'}>
       <SafeAreaView
         style={[
           styles.modalContainer,
-          smallModal
-            ? {
-                backgroundColor:
-                  Utills.selectedThemeColors().BaseOpacity('0.9'),
-                // borderWidth:1,
-                // borderColor:'red'
-              }
-            : {
-                backgroundColor: Utills.selectedThemeColors().Base,
-              },
+          safeAreaStyle,
+          smallModal && {
+            backgroundColor: Utills.selectedThemeColors().BaseOpacity('0.7'),
+            // borderWidth:1,
+            // borderColor:'red'
+          },
         ]}>
         <TouchableOpacity
           style={[
@@ -62,24 +67,49 @@ export const CustomModal: React.FC<ModalProps> = ({
               // borderColor:'red'
             },
           ]}
-          activeOpacity={0.9}
-          onPress={onClose}>
+          activeOpacity={1}
+          // onPress={onClose}
+        >
           {smallModal ? (
-            <View style={[styles.smallModalContent, smallContainerStyles]}>
-              {children}
-            </View>
-          ) : (
-            <View style={styles.modalContent}>
-              <TouchableOpacity activeOpacity={0.6} onPress={onClose}>
-                <Image
-                  source={Images.Cross}
-                  resizeMode="contain"
-                  style={{
-                    width: Metrix.HorizontalSize(35),
-                    height: Metrix.VerticalSize(35),
-                  }}
-                />
+            <TouchableOpacity
+              activeOpacity={0.9}
+              style={styles.smallModalBackdrop}
+              onPress={onClose}>
+              <TouchableOpacity
+                activeOpacity={1}
+                style={[styles.smallModalContent, smallContainerStyles]}>
+                {children}
               </TouchableOpacity>
+            </TouchableOpacity>
+          ) : (
+            <View style={[styles.modalContent, modalContainer]}>
+              {crossBtn && (
+                <TouchableOpacity
+                  style={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                  }}
+                  activeOpacity={0.6}
+                  onPress={onClose}>
+                  <Image
+                    source={Images.Cross}
+                    resizeMode="contain"
+                    style={{
+                      width: Metrix.HorizontalSize(35),
+                      height: Metrix.VerticalSize(35),
+                    }}
+                  />
+                  {title && (
+                    <>
+                      <CustomText.LargeSemiBoldText>
+                        {title}
+                      </CustomText.LargeSemiBoldText>
+                      <View></View>
+                    </>
+                  )}
+                </TouchableOpacity>
+              )}
               <View style={[styles.childrenView, childrenViewStyle]}>
                 {children}
               </View>
@@ -120,5 +150,11 @@ const styles = StyleSheet.create({
     borderColor: Utills.selectedThemeColors().TextInputBorderColor,
     padding: Metrix.VerticalSize(20),
     ...Metrix.createShadow,
+  },
+  smallModalBackdrop: {
+    width: '100%',
+    height: '100%',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });

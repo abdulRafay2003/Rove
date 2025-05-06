@@ -33,7 +33,7 @@ function push(routeName: any, params?: any) {
 }
 
 function replace(routeName: any, params?: any) {
-  _navigator.dispatch(StackActions.replace(routeName, params));
+  _navigator.dispatch(StackActions?.replace(routeName, params));
 }
 
 export default {

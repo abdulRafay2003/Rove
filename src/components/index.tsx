@@ -7,8 +7,6 @@ import {BackHeader} from './BackHeader';
 import {AuthHeader} from './AuthHeader';
 import {SecondaryButton} from './SecondaryButton';
 import {PlaceholderComponent} from './PlaceholderCompnent';
-import {MultipleHeadingComponent} from './MultipleHeadingComponent';
-import {CardComponent} from './CardComponent';
 import {RadiusSquareContainer} from './RadiusSquareContainer';
 import {ProfileHeader} from './ProfileHeader';
 import {FadeInImage} from './FadeInImage';
@@ -16,12 +14,10 @@ import {RoundImageContainer} from './RoundImageContainer';
 import {CustomModal} from './CustomModal/CustomModal';
 import {FadeContainer} from './FadeContainer/FadeContainer';
 import {Loader} from './Loader';
-import {LottieAnimatedComponent} from './LottieAnimatedComponent';
 import {EmptyState} from './EmptyState';
 import {NormalCardComponent} from './NormalCard';
-import {CategoryBtnsList} from './CategoryBtnsList';
-import {ProductCard} from './ProductCard';
-import {ProfileCard} from './ProfileCard';
+import {TextInputAlert} from './TextInputAlert';
+import {FootageGrid} from './FootageGrid';
 
 export {
   CustomText,
@@ -33,8 +29,6 @@ export {
   AuthHeader,
   SecondaryButton,
   PlaceholderComponent,
-  MultipleHeadingComponent,
-  CardComponent,
   RadiusSquareContainer,
   ProfileHeader,
   FadeInImage,
@@ -42,10 +36,8 @@ export {
   CustomModal,
   FadeContainer,
   Loader,
-  LottieAnimatedComponent,
   EmptyState,
   NormalCardComponent,
-  CategoryBtnsList,
-  ProductCard,
-  ProfileCard,
+  TextInputAlert,
+  FootageGrid,
 };

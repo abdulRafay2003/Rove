@@ -1,4 +1,4 @@
-import React, {ReactNode} from 'react';
+import React, { ReactNode } from 'react';
 import {
   Image,
   Pressable,
@@ -8,24 +8,25 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import {BackHeader} from '../BackHeader';
-import {CustomText, MainContainer, PrimaryButton, SecondaryButton} from '..';
-import {Colors, Images, Metrix, Utills} from '../../config';
-import {I18nManager} from 'react-native';
-import {PrimaryButtonProps} from '../PrimaryButton';
-import {useThemeHook} from '../../hooks';
-import {t} from 'i18next';
+import { BackHeader } from '../BackHeader';
+import { CustomText, MainContainer, PrimaryButton, SecondaryButton } from '..';
+import { Colors, Images, Metrix, Utills } from '../../config';
+import { I18nManager } from 'react-native';
+import { PrimaryButtonProps } from '../PrimaryButton';
+import { useThemeHook } from '../../hooks';
+import { t } from 'i18next';
+import { normalizeFont } from '../../config/metrix';
 
-const TouchableText: React.FC<{text: string}> = ({text}) => {
+const TouchableText: React.FC<{ text: string }> = ({ text }) => {
   // const {Colors} = useThemeHook();
   return (
     <Pressable
       // activeOpacity={0.8}
-      style={{justifyContent: 'flex-end'}}
-      onPress={() => {}}>
+      style={{ justifyContent: 'flex-end' }}
+      onPress={() => { }}>
       <CustomText.MediumText
         customStyle={{
-          color: Utills.selectedThemeColors().Primary,
+          color: Utills.selectedThemeColors().PrimaryTextColor,
           // borderWidth:1,
           // paddingBottom:
           // verticalAlign:'bottom'
@@ -41,70 +42,62 @@ type AuthHeaderProps = PrimaryButtonProps & {
   paragraph?: string;
   showBackHeader?: boolean;
   onBottomTextPress?: () => void;
-  isbottomText?: boolean;
+  isbottomText?: string;
   isBtn?: boolean;
-  title?: string;
+  isLogo?: boolean;
   isSecondaryBtn?: boolean;
   isupperText?: boolean;
   children: ReactNode;
+  title?: string;
+  childrenView?: any;
+  onSecPress?: () => void;
 };
 
 export const AuthHeader: React.FC<AuthHeaderProps> = ({
   heading,
   paragraph,
+  showBackHeader = true,
   children,
   disabled,
   title,
   onPress,
+  onSecPress,
   onBottomTextPress,
   isbottomText,
   isBtn,
+  isLogo = true,
   customStyles,
   isSecondaryBtn,
   isupperText,
+  childrenView,
 }) => {
   // const {Colors} = useThemeHook();
 
   return (
     <MainContainer
       customeStyle={{
-        paddingHorizontal: Metrix.HorizontalSize(20),
-        // paddingTop: Metrix.VerticalSize(40),
-        paddingBottom: Metrix.VerticalSize(40),
-        // borderWidth: 1,
+        paddingVertical: Metrix.VerticalSize(10),
       }}>
       <ScrollView showsVerticalScrollIndicator={false}>
+        {showBackHeader && <BackHeader />}
         <View style={styles.topContainer}>
-          <Image
-            source={Images.Logo}
-            style={{
-              width: Metrix.HorizontalSize(120),
-              height: Metrix.VerticalSize(120),
-              borderTopWidth: 8,
-              borderColor: Utills.selectedThemeColors().Base,
-            }}
-            resizeMode="cover"
-          />
+          {isLogo && (
+            <Image
+              source={Images.Logo}
+              style={{
+                width: Metrix.HorizontalSize(150),
+                height: Metrix.VerticalSize(70),
+              }}
+              resizeMode="cover"
+            />
+          )}
           <CustomText.ExtraLargeBoldText
-            customStyle={{
-              fontWeight: '500',
-              lineHeight: 50,
-              marginVertical: Metrix.VerticalSize(10),
-            }}>
+            customStyle={{ fontSize: normalizeFont(28) }}>
             {heading}
           </CustomText.ExtraLargeBoldText>
-          <CustomText.RegularText
-            isSecondaryColor
-            customStyle={{
-              textAlign: 'center',
-              width: '90%',
-              fontWeight: '500',
-            }}>
-            {paragraph}
-          </CustomText.RegularText>
         </View>
 
-        <View style={styles.childrenView}>
+        <View style={[styles.childrenView, childrenView]}>
           <View
             style={
               {
@@ -116,7 +109,7 @@ export const AuthHeader: React.FC<AuthHeaderProps> = ({
           <View
             style={[
               styles.bottomContainer,
-              !isBtn && {justifyContent: 'flex-end'},
+              !isBtn && { justifyContent: 'flex-end' },
             ]}>
             {isupperText && (
               <View>
@@ -139,31 +132,39 @@ export const AuthHeader: React.FC<AuthHeaderProps> = ({
               />
             )}
             {isSecondaryBtn && (
-              <View style={{marginBottom: Metrix.VerticalSize(50)}}>
+              <View style={{ marginBottom: Metrix.VerticalSize(50) }}>
+                <CustomText.RegularText
+                  customStyle={{
+                    color: Utills.selectedThemeColors().LightGreyText,
+                    textAlign: 'center',
+                    lineHeight: 30,
+                  }}>
+                  {t('or')}
+                </CustomText.RegularText>
+
                 <SecondaryButton
-                  onPress={onPress}
-                  title={t('signup')}
+                  onPress={onSecPress}
+                  title={t('Continue with Google')}
                   source={Images.GoogleLogo}
+                  isIcon
                 />
               </View>
             )}
             {isbottomText && (
               <View style={styles.bottomText}>
-                <CustomText.RegularText isSecondaryColor>
-                  {t('Don’t have an account?')}{' '}
-                </CustomText.RegularText>
-                <TouchableOpacity onPress={onBottomTextPress}>
-                  <CustomText.RegularText
-                    customStyle={{
-                      textDecorationLine: 'underline',
-                      fontWeight: '500',
-                      color: Utills.selectedThemeColors().Secondary,
-                    }}>
-                    {t('Sign Up Now')}
-                  </CustomText.RegularText>
+                <CustomText.MediumText isSecondaryColor>
+                  New to Rove?{' '}
+                </CustomText.MediumText>
+                <TouchableOpacity
+                  style={styles.bottomTouchable}
+                  onPress={onBottomTextPress}>
+                  <CustomText.MediumText>
+                    {isbottomText}
+                  </CustomText.MediumText>
                 </TouchableOpacity>
               </View>
             )}
+
           </View>
         </View>
       </ScrollView>
@@ -176,11 +177,14 @@ const styles = StyleSheet.create({
     // marginVertical: Metrix.VerticalSize(40),
   },
   bottomText: {
-    marginVertical: Metrix.VerticalSize(10),
-    justifyContent: 'center',
     flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
-  bottomContainer: {justifyContent: 'space-between'},
+  bottomTouchable: {
+    justifyContent: 'center',
+  },
+  bottomContainer: { justifyContent: 'space-between' },
   childrenView: {
     marginVertical: Metrix.VerticalSize(20),
     flex: 4,
@@ -188,8 +192,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   topContainer: {
-    // borderWidth: 1,
-    // flex: 1.7,
+    flex: 1.0,
     alignItems: 'center',
     justifyContent: 'space-between',
   },

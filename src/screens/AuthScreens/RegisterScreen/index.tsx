@@ -1,19 +1,14 @@
 import {
-  Alert,
-  KeyboardAvoidingView,
-  Platform,
-  ScrollView,
+  Image,
+  Pressable,
   StyleSheet,
-  Text,
   TextInput,
   TouchableOpacity,
   View,
 } from 'react-native';
 import React, {useRef, useState} from 'react';
 import {
-  Colors,
-  Fonts,
-  FontType,
+  Images,
   Metrix,
   NavigationService,
   RouteNames,
@@ -21,88 +16,113 @@ import {
 } from '../../../config';
 import {
   AuthHeader,
-  BackHeader,
   CustomInput,
+  CustomModal,
   CustomText,
   Loader,
 } from '../../../components';
 import {Formik} from 'formik';
-import Schema from '../../../formik';
-import {LoginScreenProps, RegisterScreenProps} from '../../propTypes';
-import {useDispatch, useSelector} from 'react-redux';
-import {AuthActions, HomeActions} from '../../../redux/actions';
-import {RootState} from '../../../redux/reducers';
+import {RegisterScreenProps} from '../../propTypes';
+import {useDispatch} from 'react-redux';
+import {HomeActions} from '../../../redux/actions';
 import {t} from 'i18next';
 import {AuthAPIS} from '../../../services/auth/index';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {Dropdown} from 'react-native-element-dropdown';
-
-const data = [
-  {label: 'Client', value: 2},
-  // {label: 'Employee', value: 3},
-  {label: 'Student', value: 4},
-];
+import PhoneInput from 'react-native-phone-number-input';
+import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 
 export const RegisterScreen: React.FC<RegisterScreenProps> = ({}) => {
   const dispatch = useDispatch();
-  const [hidePassword, setHidePassword] = useState(true);
-  const [hideConfPassword, setHideConfPassword] = useState(true);
+  const [hidePassword, setHidePassword] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [check, setCheck] = useState(false);
+  const [modalPostVisible, setModalPostVisible] = useState(false);
+  const [phoneNo, setPhoneNo] = useState('');
+  const phoneInput = useRef(null);
 
-  const [value, setValue] = useState(null);
-  const [isFocus, setIsFocus] = useState(false);
-
-  const userDetails = useSelector((state: RootState) => state.home.userDetails);
-  console.log('========Login', value);
-
-  let lNameRef = useRef<TextInput>(null!);
+  let fNameRef = useRef<TextInput>(null!);
+  let lNameref = useRef<TextInput>(null!);
   let emailref = useRef<TextInput>(null!);
-  let phoneRef = useRef<TextInput>(null!);
-  let nicRef = useRef<TextInput>(null!);
-  let referralRef = useRef<TextInput>(null!);
   let passwordRef = useRef<TextInput>(null!);
-  let confPasswordRef = useRef<TextInput>(null!);
 
-  const passwordRegex =
-    /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>])[A-Za-z\d!@#$%^&*(),.?":{}|<>]{8,}$/;
+  const handleOnClosePost = () => {
+    setModalPostVisible(false);
+  };
 
-  function validatePassword(password: string) {
-    if (passwordRegex.test(password)) {
-      return true;
-    } else {
-      return false;
+  const handlePhoneChange = (val: string) => {
+    const callingCode = phoneInput.current?.getCallingCode(); // Get the calling code
+    const sanitizedVal = val?.replace(/\s/g, ''); // Remove spaces
+
+    const fullPhoneNumber = `+${callingCode}${sanitizedVal}`; // Concatenate country code with the sanitized number
+    // Check if the number matches E.164 format
+    const isValidE164 = /^\+[1-9]\d{1,14}$/.test(fullPhoneNumber);
+
+    if (isValidE164) {
+      setPhoneNo(fullPhoneNumber); // Update state with valid phone number
     }
-  }
+  };
+
+  const otpGenerate = (phone: any) => {
+    const body = {
+      phone_number: phone,
+    };
+    AuthAPIS.sendOtp(body)
+      .then(res => {
+        console.log('Res OTP', res?.data);
+        setLoading(false);
+        NavigationService.navigate(RouteNames.AuthRoutes.OtpScreen, {
+          phone: phone,
+        });
+      })
+      .catch(err => {
+        console.log('Err Otp', err.response?.data);
+        setLoading(false);
+      });
+  };
 
   const registerUser = (body: Object) => {
-    console.log('Body', body);
     setLoading(true);
     AuthAPIS.userSignup(body)
       .then(res => {
-        console.log('Res', res?.data?.data);
+        console.log('Res Signup', res?.data?.data);
         dispatch(
           HomeActions.setUserDetails({
-            ...res?.data?.data,
+            user: res?.data?.data?.user,
+            token: res?.data?.meta?.session_token,
           }),
         );
         AsyncStorage.setItem(
           'userData',
           JSON.stringify({
-            ...res?.data?.data,
+            user: res?.data?.data?.user,
+            token: res?.data?.meta?.session_token,
           }),
         );
-        dispatch(AuthActions.loginSuccess(true));
-        setLoading(false);
+        getToken(body, res?.data?.data?.user);
       })
       .catch(err => {
-        let errors = err.response?.data?.data?.errors;
-        console.log('Err', errors);
+        console.log('Err', err.response?.data);
         setLoading(false);
-        if (Object.entries(errors).length > 0) {
-          for (const [key, value] of Object.entries(errors)) {
-            Utills.showToast(value);
-          }
-        }
+      });
+  };
+
+  const getToken = (body: Object, obj: any) => {
+    AuthAPIS.getAccessToken(body)
+      .then(res => {
+        console.log('Res Token', res?.data);
+        dispatch(
+          HomeActions.setUserDetails({
+            user: obj,
+            token: res?.data?.access,
+          }),
+        );
+        setLoading(false);
+        otpGenerate(phoneNo);
+      })
+      .catch(err => {
+        console.log('Err', err?.data?.errors?.[0]?.message);
+        Utills.showToast(err?.response?.data?.errors?.[0]?.message);
+        setLoading(false);
       });
   };
 
@@ -112,79 +132,57 @@ export const RegisterScreen: React.FC<RegisterScreenProps> = ({}) => {
         fName: '',
         lName: '',
         email: '',
-        phone: '',
-        nicNumber: '',
         password: '',
-        confirmPassword: '',
-        referralCode: '',
       }}
       onSubmit={values => {
-        NavigationService.navigate(RouteNames.AuthRoutes.OtpScreen);
-        // if (values?.fName?.length == 0) {
-        //   Utills.showToast('First name is required');
-        // } else if (values?.lName?.length == 0) {
-        //   Utills.showToast('Last name is required');
-        // } else if (values?.email?.length == 0) {
-        //   Utills.showToast('Email is required');
-        // } else if (values?.password?.length == 0) {
-        //   Utills.showToast('Password is required');
-        // } else if (values?.confirmPassword?.length == 0) {
-        //   Utills.showToast('Confirm password is required');
+        const body = {
+          password: values?.password,
+          email: values?.email,
+          first_name: values?.fName,
+          last_name: values?.lName,
+          full_name: values?.fName + ' ' + values?.lName,
+          phone_number: phoneNo,
+        };
+        console.log('SignupBody', body);
 
-        // } else if (values?.nicNumber?.length == 0) {
-        //   Utills.showToast('NIC number is required');
-        // } else if (values?.phone?.length == 0) {
-        //   Utills.showToast('Mobile number is required');
-        // } else if (value == null) {
-        //   Utills.showToast('Register as field is required');
-        // } else {
-        //   const body = {
-        //     first_name: values?.fName,
-        //     last_name: values?.lName,
-        //     email: values?.email,
-        //     password: values?.password,
-        //     nic: values?.nicNumber,
-        //     mobile_number: values?.phone,
-        //     mobile_number_country: 'PK',
-        //     role_id: value,
-        //     referral_code: '',
-        //   };
-        //   registerUser(body);
-        // }
-      }}
-      // validationSchema={Schema.LoginSchema}
-    >
+        if (values?.fName?.length === 0) {
+          Utills.showToast('Enter first name');
+        } else if (values?.lName?.length === 0) {
+          Utills.showToast('Enter last name');
+        } else if (values?.email?.length === 0) {
+          Utills.showToast('Enter email');
+        } else if (phoneNo?.length === 0) {
+          Utills.showToast('Please enter a valid phone number in E.164 format');
+        } else if (values?.password?.length === 0) {
+          Utills.showToast('Enter password');
+        } else if (check === false) {
+          setModalPostVisible(true);
+        } else {
+          registerUser(body);
+        }
+      }}>
       {({
         values,
         errors,
         touched,
         handleChange,
         setFieldTouched,
-        isValid,
         handleSubmit,
       }) => (
         <>
-          <BackHeader
-            customeStyle={{
-              paddingTop: Metrix.VerticalSize(60),
-              paddingBottom: 0,
-              paddingHorizontal: Metrix.HorizontalSize(20),
-            }}
-          />
-          {/* <ScrollView showsVerticalScrollIndicator={false}> */}
           <AuthHeader
-            heading={t('Lets_sign_up')}
-            paragraph="Create a new account by providing your email, setting a password, and filling out the required details."
-            title={t('Signup')}
-            // customStyles={{marginTop: Metrix.VerticalSize(20)}}
+            heading={t('Lets Sign Up')}
+            title={t('Create my account')}
+            isLogo={true}
             isBtn
             onPress={() => handleSubmit()}
             onBottomTextPress={() =>
-              NavigationService.navigate(RouteNames.AuthRoutes.LoginScreen)
+              NavigationService.navigate(RouteNames.AuthRoutes.SignUpScreen)
             }>
+            {/* <ScrollView showsVerticalScrollIndicator={false}> */}
             <CustomInput
-              heading={t('first_name')}
-              placeholder={t('enter_first_name')}
+              heading={t('First Name')}
+              placeholder={t('Enter your first name')}
               onChangeText={handleChange('fName')}
               onBlur={() => setFieldTouched('fName')}
               value={values?.fName}
@@ -193,11 +191,12 @@ export const RegisterScreen: React.FC<RegisterScreenProps> = ({}) => {
               autoCapitalize="none"
               returnKeyType="next"
               keyboardType="default"
-              onSubmitEditing={() => lNameRef.current.focus()}
+              onSubmitEditing={() => lNameref.current.focus()}
+              inputRef={fNameRef}
             />
             <CustomInput
-              heading={t('last_name')}
-              placeholder={t('enter_last_name')}
+              heading={t('Last Name')}
+              placeholder={t('Enter your last name')}
               onChangeText={handleChange('lName')}
               onBlur={() => setFieldTouched('lName')}
               value={values?.lName}
@@ -207,11 +206,11 @@ export const RegisterScreen: React.FC<RegisterScreenProps> = ({}) => {
               returnKeyType="next"
               keyboardType="default"
               onSubmitEditing={() => emailref.current.focus()}
-              inputRef={lNameRef}
+              inputRef={lNameref}
             />
             <CustomInput
-              heading={t('email')}
-              placeholder={t('enter_mail')}
+              heading={t('Email')}
+              placeholder={t('Enter your email')}
               onChangeText={handleChange('email')}
               onBlur={() => setFieldTouched('email')}
               value={values?.email}
@@ -220,149 +219,52 @@ export const RegisterScreen: React.FC<RegisterScreenProps> = ({}) => {
               autoCapitalize="none"
               returnKeyType="next"
               keyboardType="email-address"
-              onSubmitEditing={() => phoneRef.current.focus()}
               inputRef={emailref}
-            />
-
-            <CustomInput
-              heading={t('phone_number')}
-              placeholder={t('enter_phone_number')}
-              onChangeText={handleChange('phone')}
-              onBlur={() => setFieldTouched('phone')}
-              value={values?.phone}
-              error={errors?.phone}
-              touched={touched?.phone}
-              autoCapitalize="none"
-              returnKeyType="next"
-              keyboardType="phone-pad"
-              onSubmitEditing={() => nicRef.current.focus()}
-              inputRef={phoneRef}
-            />
-
-            <CustomInput
-              heading={'Card Billing Address'}
-              placeholder={'Enter your card billing address'}
-              onChangeText={handleChange('nicNumber')}
-              onBlur={() => setFieldTouched('nicNumber')}
-              value={values?.nicNumber}
-              error={errors?.nicNumber}
-              touched={touched?.nicNumber}
-              autoCapitalize="none"
-              returnKeyType="next"
-              keyboardType="phone-pad"
-              onSubmitEditing={() => referralRef.current.focus()}
-              inputRef={nicRef}
-            />
-
-            <CustomInput
-              heading={'Card Billing Address'}
-              placeholder={'Enter your card billing address'}
-              onChangeText={handleChange('nicNumber')}
-              onBlur={() => setFieldTouched('nicNumber')}
-              value={values?.nicNumber}
-              error={errors?.nicNumber}
-              touched={touched?.nicNumber}
-              autoCapitalize="none"
-              returnKeyType="next"
-              keyboardType="phone-pad"
-              onSubmitEditing={() => referralRef.current.focus()}
-              inputRef={nicRef}
-            />
-            <CustomInput
-              heading={'Card Billing Address'}
-              placeholder={'Enter your card billing address'}
-              onChangeText={handleChange('nicNumber')}
-              onBlur={() => setFieldTouched('nicNumber')}
-              value={values?.nicNumber}
-              error={errors?.nicNumber}
-              touched={touched?.nicNumber}
-              autoCapitalize="none"
-              returnKeyType="next"
-              keyboardType="phone-pad"
-              onSubmitEditing={() => referralRef.current.focus()}
-              inputRef={nicRef}
-            />
-            <CustomInput
-              heading={'Card Billing Address'}
-              placeholder={'Enter your card billing address'}
-              onChangeText={handleChange('nicNumber')}
-              onBlur={() => setFieldTouched('nicNumber')}
-              value={values?.nicNumber}
-              error={errors?.nicNumber}
-              touched={touched?.nicNumber}
-              autoCapitalize="none"
-              returnKeyType="next"
-              keyboardType="phone-pad"
-              onSubmitEditing={() => referralRef.current.focus()}
-              inputRef={nicRef}
-            />
-            <CustomInput
-              heading={'Card Billing Address'}
-              placeholder={'Enter your card billing address'}
-              onChangeText={handleChange('nicNumber')}
-              onBlur={() => setFieldTouched('nicNumber')}
-              value={values?.nicNumber}
-              error={errors?.nicNumber}
-              touched={touched?.nicNumber}
-              autoCapitalize="none"
-              returnKeyType="next"
-              keyboardType="phone-pad"
-              onSubmitEditing={() => referralRef.current.focus()}
-              inputRef={nicRef}
             />
 
             <CustomText.RegularText
               customStyle={{
+                // textAlign: I18nManager.forceRTL ? 'left' : 'right',
+                marginBottom: Metrix.VerticalSize(10),
                 marginLeft: Metrix.HorizontalSize(10),
                 fontSize: Metrix.customFontSize(15),
               }}>
-              Register As
+              {t('Phone Number')}
             </CustomText.RegularText>
 
-            <Dropdown
-              style={styles.dropdown}
-              placeholderStyle={styles.placeholderStyle}
-              selectedTextStyle={styles.selectedTextStyle}
-              itemTextStyle={{
+            <PhoneInput
+              ref={phoneInput}
+              containerStyle={{
+                borderRadius: Metrix.HorizontalSize(10),
+                borderWidth: 2,
+                borderColor: Utills.selectedThemeColors().TextInputBorderColor,
+                backgroundColor: Utills.selectedThemeColors().Base,
+                width: '100%',
+              }}
+              textInputProps={{
+                selectionColor: Utills.selectedThemeColors().PrimaryTextColor, // Change cursor color here
+              }}
+              codeTextStyle={{
                 color: Utills.selectedThemeColors().PrimaryTextColor,
               }}
-              containerStyle={{
-                borderWidth: 1,
-                width: '85%',
-                borderRadius: 10,
-                marginLeft: Metrix.HorizontalSize(10),
+              textContainerStyle={{
+                backgroundColor: Utills.selectedThemeColors().Base,
+                borderRadius: Metrix.HorizontalSize(10),
               }}
-              data={data}
-              labelField="label"
-              valueField="value"
-              placeholder={'Register As'}
-              value={value}
-              onFocus={() => setIsFocus(true)}
-              onBlur={() => setIsFocus(false)}
-              onChange={item => {
-                setValue(item?.value);
-                setIsFocus(false);
+              textInputStyle={{
+                color: Utills.selectedThemeColors().PrimaryTextColor,
               }}
+              layout="first"
+              defaultValue={phoneNo}
+              withDarkTheme
+              defaultCode="US"
+              onChangeText={handlePhoneChange}
+              onChangeCountry={() => setPhoneNo('')}
             />
 
             <CustomInput
-              heading={t('Referral Code')}
-              placeholder={t('Enter refrral code')}
-              onChangeText={handleChange('referralCode')}
-              onBlur={() => setFieldTouched('referralCode')}
-              value={values?.referralCode}
-              error={errors?.referralCode}
-              touched={touched?.referralCode}
-              autoCapitalize="none"
-              returnKeyType="next"
-              keyboardType="default"
-              onSubmitEditing={() => passwordRef.current.focus()}
-              inputRef={referralRef}
-            />
-
-            <CustomInput
-              heading={t('password')}
-              placeholder={t('enter_your_password')}
+              heading={t('Password')}
+              placeholder={t('Enter your password')}
               value={values?.password}
               onChangeText={handleChange('password')}
               onBlur={() => setFieldTouched('password')}
@@ -377,78 +279,104 @@ export const RegisterScreen: React.FC<RegisterScreenProps> = ({}) => {
                 }
               }}
               returnKeyType="done"
-              onSubmitEditing={() => confPasswordRef.current.focus()}
               inputRef={passwordRef}
             />
-            <CustomInput
-              heading={t('confirm_password')}
-              placeholder={t('enter_confirm_password')}
-              value={values?.confirmPassword}
-              onChangeText={handleChange('confirmPassword')}
-              onBlur={() => setFieldTouched('confirmPassword')}
-              error={errors?.confirmPassword}
-              touched={touched?.confirmPassword}
-              secureTextEntry={hideConfPassword}
-              hidepswdState={hideConfPassword}
-              eye
-              onEyePress={() => {
-                if (values?.password) {
-                  setHideConfPassword(prev => !prev);
-                }
-              }}
-              returnKeyType="done"
-              inputRef={confPasswordRef}
-            />
+            <View style={styles.privacyContainer}>
+              <Pressable
+                onPress={() => setCheck(!check)}
+                style={styles.checkBox}>
+                {check && (
+                  <MaterialIcon
+                    name="check"
+                    color={Utills.selectedThemeColors().PrimaryTextColor}
+                    size={17}
+                  />
+                )}
+              </Pressable>
+              <TouchableOpacity
+                onPress={() => {
+                  setModalPostVisible(true);
+                }}
+                activeOpacity={0.7}
+                style={{width: '85%'}}>
+                <CustomText.SmallText
+                  customStyle={{
+                    marginLeft: 5,
+                    textAlign: 'center',
+                  }}>
+                  Do You agree to our Terms of Service and Privacy Policy?
+                </CustomText.SmallText>
+              </TouchableOpacity>
+            </View>
             <Loader isLoading={loading} />
+            {/* </ScrollView> */}
           </AuthHeader>
-          {/* </ScrollView> */}
+
+          <CustomModal onClose={handleOnClosePost} visible={modalPostVisible}>
+            <View
+              style={{
+                alignItems: 'center',
+                flex: 1,
+              }}>
+              <CustomText.ExtraLargeBoldText
+                customStyle={{
+                  textAlign: 'center',
+                  textDecorationLine: 'underline',
+                }}>
+                Disclaimer
+              </CustomText.ExtraLargeBoldText>
+              <CustomText.RegularText
+                isSecondaryColor
+                customStyle={{paddingVertical: Metrix.VerticalSize(10)}}>
+                Last Updated: 19 September, 2024
+              </CustomText.RegularText>
+              <View style={{flex: 1, paddingVertical: Metrix.VerticalSize(10)}}>
+                <CustomText.RegularText customStyle={{textAlign: 'center'}}>
+                  Please read this disclaimer carefully before using Rove,
+                  operated and owned by {'\n'}Rove AI (Inc) (“us, “we” or our”).
+                  {'\n' + '\n'} While our solution aims to provide reliable
+                  monitoring, occasional disruptions may occur due to factors
+                  like poor reception or your device’s microphone being
+                  obstructed, such as when it’s inside a bag or pocket. For
+                  optimal protection, please ensure that your microphone remains
+                  unobstructed, especially in environments where security is
+                  critical. {'\n' + '\n'} By accessing or using the service, you
+                  agree to be bound by these terms. If you do not agree, you may
+                  not access the service. {'\n' + '\n'} Terms and conditions
+                  provided by {'\n'} Rove AI (Inc)
+                </CustomText.RegularText>
+              </View>
+              <Image
+                source={Images.Logo}
+                style={{
+                  width: Metrix.HorizontalSize(120),
+                  height: Metrix.VerticalSize(60),
+                }}
+                resizeMode="cover"
+              />
+            </View>
+          </CustomModal>
         </>
       )}
     </Formik>
   );
 };
 
-interface RegisterScreenStyles {}
 const styles = StyleSheet.create({
-  container: {
-    backgroundColor: 'white',
-    padding: 16,
+  privacyContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: Metrix.VerticalSize(10),
   },
-  dropdown: {
-    height: 50,
-    borderColor: Utills.selectedThemeColors().TextInputBorderColor,
-    borderWidth: 2,
-    borderRadius: 100,
-    paddingHorizontal: 20,
-    marginVertical: Metrix.VerticalSize(10),
-  },
-  icon: {
-    marginRight: 5,
-  },
-  label: {
-    position: 'absolute',
-    backgroundColor: 'white',
-    left: 22,
-    top: 8,
-    zIndex: 999,
-    paddingHorizontal: 8,
-    fontSize: 14,
-  },
-  placeholderStyle: {
-    fontSize: 16,
-    color: Utills.selectedThemeColors().TextInputPlaceholserColor,
-  },
-  selectedTextStyle: {
-    fontSize: Metrix.customFontSize(14),
-    fontFamily: Fonts['Regular'],
-    color: Utills.selectedThemeColors().PrimaryTextColor,
-  },
-  iconStyle: {
-    width: 20,
-    height: 20,
-  },
-  inputSearchStyle: {
-    height: 40,
-    fontSize: 16,
+  checkBox: {
+    marginLeft: 10,
+    borderWidth: 1,
+    borderColor: 'white',
+    width: Metrix.HorizontalSize(18),
+    height: Metrix.VerticalSize(18),
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 3,
+    marginHorizontal: 3,
   },
 });

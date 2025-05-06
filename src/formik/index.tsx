@@ -29,13 +29,6 @@ const LoginSchema = Yup.object().shape({
   password: Yup.string().required('Please enter your password.'),
 });
 
-const RegisterSchema = Yup.object().shape({
-  email: Yup.string()
-    .matches(emailRegex, 'Invalid email')
-    .required('Please enter your email address.'),
-  password: Yup.string().required('Please enter your password.'),
-});
-
 const ForgotPasswordSchema = Yup.object().shape({
   email: Yup.string()
     .matches(emailRegex, 'Invalid email')
@@ -89,5 +82,4 @@ export default {
   ChangePasswordSchema,
   ResetPasswordSchema,
   GoogleSignUpSchema,
-  RegisterSchema,
 };

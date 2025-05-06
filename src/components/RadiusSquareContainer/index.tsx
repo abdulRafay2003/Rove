@@ -41,8 +41,6 @@ export const RadiusSquareContainer: React.FC<RadiusSquareContainerProps> = ({
     }).start();
   }, [fadeAnim]);
 
-  // console.log('=====dada', typeof fadeAnim);
-
   return (
     <ImageBackground
       style={[styles.imageStyle, customImageContainerStyle]}
@@ -50,7 +48,7 @@ export const RadiusSquareContainer: React.FC<RadiusSquareContainerProps> = ({
       resizeMode={resizeMode}
       onLoadStart={() => setIsLoad(true)}
       onLoadEnd={() => setIsLoad(false)}>
-      {isLoad && (
+      {/* {isLoad && (
         
         <LottieAnimatedComponent src={require('../../assets/animations/loadingImage.json')} customStyle={
           {
@@ -62,7 +60,7 @@ export const RadiusSquareContainer: React.FC<RadiusSquareContainerProps> = ({
             //   alignSelf: "center",
           }
         }/>
-      )}
+      )} */}
      
       {subHeading && heading && (
         <View

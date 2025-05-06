@@ -1,53 +1,77 @@
 import {TransitionPresets} from '@react-navigation/stack';
 import {RouteNames} from '../config';
-import {ChatMessages, Chats, Dashboard, Location, WebView} from '../screens';
-import {DrawerStack} from './DrawerStack';
+import {
+  // AddContacts,
+  EditPreferences,
+  EditProfile,
+  FAQ,
+  FootageDetails,
+  Footages,
+  LiveStream,
+  TermsAndPolicy,
+  Videos,
+} from '../screens';
 import {TabStack} from './TabStack';
 
 type HomeScreenStacksTypes = {
   name: string;
-  component: React.FC<any>;
+  component: any;
   key: string;
   option?: any;
 }[];
 
 export const HomeStack: HomeScreenStacksTypes = [
-  // {
-  //   name: RouteNames.HomeRoutes.DrawerStack,
-  //   component: DrawerStack,
-  //   key: RouteNames.HomeRoutes.DrawerStack,
-  // },
   {
     name: RouteNames.HomeRoutes.TabStack,
     component: TabStack,
     key: RouteNames.HomeRoutes.TabStack,
   },
   {
-    name: RouteNames.HomeRoutes.WebView,
-    component: WebView,
-    key: RouteNames.HomeRoutes.WebView,
+    name: RouteNames.HomeRoutes.LiveStream,
+    component: LiveStream,
+    key: RouteNames.HomeRoutes.LiveStream,
   },
   {
-    name: RouteNames.HomeRoutes.Location,
-    component: Location,
-    key: RouteNames.HomeRoutes.Location,
+    name: RouteNames.HomeRoutes.EditProfileScreen,
+    component: EditProfile,
+    key: RouteNames.HomeRoutes.EditProfileScreen,
+  },
+  // {
+  //   name: RouteNames.HomeRoutes.AddContacts,
+  //   component: AddContacts,
+  //   key: RouteNames.HomeRoutes.AddContacts,
+  // },
+  {
+    name: RouteNames.HomeRoutes.TermsAndPolicy,
+    component: TermsAndPolicy,
+    key: RouteNames.HomeRoutes.TermsAndPolicy,
+  },
+  {
+    name: RouteNames.HomeRoutes.FAQ,
+    component: FAQ,
+    key: RouteNames.HomeRoutes.FAQ,
+  },
+  {
+    name: RouteNames.HomeRoutes.EditPreferences,
+    component: EditPreferences,
+    key: RouteNames.HomeRoutes.EditPreferences,
+  },
+  {
+    name: RouteNames.HomeRoutes.Footages,
+    component: Footages,
+    key: RouteNames.HomeRoutes.Footages,
+  },
+  {
+    name: RouteNames.HomeRoutes.FootageDetails,
+    component: FootageDetails,
+    key: RouteNames.HomeRoutes.FootageDetails,
+  },
+  {
+    name: RouteNames.HomeRoutes.Videos,
+    component: Videos,
+    key: RouteNames.HomeRoutes.Videos,
     option: {
       ...TransitionPresets.ModalTransition,
     },
-  },
-  {
-    name: RouteNames.HomeRoutes.Chats,
-    component: Chats,
-    key: RouteNames.HomeRoutes.Chats,
-  },
-  {
-    name: RouteNames.HomeRoutes.Dashboard,
-    component: Dashboard,
-    key: RouteNames.HomeRoutes.Dashboard,
-  },
-  {
-    name: RouteNames.HomeRoutes.ChatMessages,
-    component: ChatMessages,
-    key: RouteNames.HomeRoutes.ChatMessages,
   },
 ];

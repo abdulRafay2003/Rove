@@ -19,13 +19,10 @@ import {
   Utills,
 } from '../../config';
 import {CustomText} from '..';
-import colors from '../../config/colors';
-import utills from '../../config/utills';
 import {normalizeFont} from '../../config/metrix';
 
 type BackHeaderProps = {
   heading?: string;
-  right?: boolean;
   customeStyle?: StyleProp<ViewStyle>;
   btnImage?: ImageSourcePropType;
   backArrow?: boolean;
@@ -39,7 +36,6 @@ export const BackHeader: React.FC<BackHeaderProps> = ({
   customeStyle,
   btnImage = Images.BackBtn,
   backArrow = true,
-  right = false,
   backFunction = () => NavigationService.goBack(),
   isBoldHeading,
   btnImageStyle,
@@ -49,7 +45,7 @@ export const BackHeader: React.FC<BackHeaderProps> = ({
       {backArrow ? (
         <TouchableOpacity style={styles.backButton} onPress={backFunction}>
           <Image
-            source={Images.Arrow}
+            source={Images.ArrowChevron}
             resizeMode="contain"
             style={[styles.backImage, btnImageStyle]}
           />
@@ -57,31 +53,20 @@ export const BackHeader: React.FC<BackHeaderProps> = ({
       ) : (
         <View style={isBoldHeading ? {} : styles.backButton} />
       )}
-      <View style={isBoldHeading ? {} : styles.headingContainer}>
+      <View style={styles.headingContainer}>
         {isBoldHeading ? (
           <CustomText.LargeBoldText>{heading}</CustomText.LargeBoldText>
         ) : (
-          <CustomText.MediumText
+          <CustomText.LargeSemiBoldText
             customStyle={{
-              fontWeight: '700',
-              fontSize: normalizeFont(20),
-              color: Utills.selectedThemeColors().Secondary,
+              color: Colors.PrimaryTextColor,
+              fontSize: normalizeFont(18),
             }}>
             {heading}
-          </CustomText.MediumText>
+          </CustomText.LargeSemiBoldText>
         )}
       </View>
-      {right ? (
-        <TouchableOpacity style={styles.backButton} onPress={backFunction}>
-          <Image
-            source={Images.Search}
-            resizeMode="contain"
-            style={[styles.backImage, btnImageStyle]}
-          />
-        </TouchableOpacity>
-      ) : (
-        <View style={isBoldHeading ? {} : styles.backButton} />
-      )}
+      <View style={styles.backButton} />
     </View>
   );
 };
@@ -92,16 +77,16 @@ const styles = StyleSheet.create({
     // alignItems: 'center',
     width: '100%',
     // paddingTop: Metrix.VerticalSize(10),
-    paddingBottom: Metrix.VerticalSize(10),
+    marginBottom: Metrix.VerticalSize(10),
   },
   backButton: {
     width: '15%',
-    // borderColor:'white'
   },
   backImage: {
     width: Metrix.HorizontalSize(30),
     height: Metrix.VerticalSize(30),
-    tintColor: utills.selectedThemeColors()?.Secondary,
+    tintColor: Utills.selectedThemeColors().PrimaryTextColor,
+    transform: [{rotate: '180deg'}],
   },
   headingContainer: {
     // paddingVertical:5,

@@ -3,14 +3,14 @@ import {StackNavigationProp} from '@react-navigation/stack';
 
 // params Object
 type AuthParamList = {
-  ChangePassword: {from?: string; data?: object};
-  OtpScreen: {email: string; from?: string};
+  OtpScreen: {email: string; from?: string; phone: string};
   VideoScreen: {courseId?: string};
 };
 
+type HomeParamList = {};
+
 // Auth Screens Types
 export type LoginScreenProps = {};
-export type RegisterScreenProps = {};
 
 export type OtpScreenProps = {
   navigation: StackNavigationProp<AuthParamList, 'OtpScreen'>;
@@ -18,18 +18,43 @@ export type OtpScreenProps = {
 };
 
 export type ForgotPasswordProps = {};
+
+export type RegisterScreenProps = {};
+
 export type SelectLanguageProps = {};
+
+export type GoogleSignUpProps = {};
+
+export type VerifyUserProps = {};
+
 export type OnBoardingProps = {};
 
 // Home Screen Types
 
-export type HomeScreenProps = {};
-export type LocationProps = {};
-export type InfoProps = {};
+export type NavigationScreenProps = {};
+
+export type TermsAndPolicyProps = {};
+
+export type TrustedContactsProps = {};
+
 export type SearchProps = {};
-export type WebViewProps = {};
-export type ChatsProps = {};
-export type DashboardProps = {};
+
+export type LiveStreamProps = {};
+
+export type PreferencesProps = {};
+
+export type EditPreferencesProps = {};
+
+export type AddContactsProps = {};
+
+export type SettingsProps = {};
+
 export type EditProfileProps = {};
-export type ChangePasswordProps = {};
-export type ChatMessagesProps = {};
+
+export type FAQProps = {};
+
+export type SafeZoneProps = {};
+
+export type FootagesProps = {};
+
+export type FootageDetailsProps = {};

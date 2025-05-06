@@ -18,6 +18,8 @@ type CustomSearchBarProps = TextInputProps & {
   onBtnPress?: () => void;
   iconStyle?: ImageProps['style'];
   inputRef?: Ref<TextInput>;
+  mainContainer?: ViewStyle;
+  leftIcon?: any;
 };
 
 export const CustomSearchBar: FC<CustomSearchBarProps> = ({
@@ -27,21 +29,24 @@ export const CustomSearchBar: FC<CustomSearchBarProps> = ({
   onBtnPress,
   iconStyle = {},
   inputRef,
+  mainContainer,
+  leftIcon = Images.Search,
   ...rest
 }) => {
   return (
-    <View style={styles.textContainer}>
+    <View style={[styles.textContainer, mainContainer]}>
       <Image
-        source={Images.Search}
+        source={leftIcon}
         style={{
-          width: 20,
-          height: 20,
-          tintColor: Utills.selectedThemeColors().Primary,
+          width: 24,
+          height: 24,
+          tintColor: Utills.selectedThemeColors().PrimaryTextColor,
+          marginLeft: Metrix.HorizontalSize(10),
         }}
         resizeMode="contain"
       />
       <TextInput
-        selectionColor={Utills.selectedThemeColors().Secondary}
+        selectionColor={Utills.selectedThemeColors().PrimaryTextColor}
         style={[styles.textInput, customStyle]}
         placeholderTextColor={Utills.selectedThemeColors().SecondaryTextColor}
         ref={inputRef}
@@ -53,23 +58,25 @@ export const CustomSearchBar: FC<CustomSearchBarProps> = ({
 
 const styles = StyleSheet.create({
   textContainer: {
-    borderWidth: 1,
-    borderRadius: Metrix.VerticalSize(8),
+    //   borderWidth: 2,
+    borderRadius: Metrix.VerticalSize(10),
     height: Metrix.VerticalSize(40),
     width: '100%',
     flexDirection: 'row',
-    paddingLeft: Metrix.HorizontalSize(15),
+    //   justifyContent: 'space-between',
     marginVertical: Metrix.VerticalSize(10),
-    backgroundColor: Utills.selectedThemeColors().Base,
-    borderColor: Utills.selectedThemeColors().SecondaryTextColor,
+    backgroundColor: '#FFFFFF20',
+    borderColor: Utills.selectedThemeColors().TextInputBorderColor,
     alignItems: 'center',
     overflow: 'hidden',
   },
   textInput: {
+    // borderWidth:1,
     color: Utills.selectedThemeColors().PrimaryTextColor,
     fontSize: Metrix.customFontSize(14),
-    padding: Metrix.VerticalSize(10),
+    padding: Metrix.VerticalSize(12),
     fontFamily: Fonts['Regular'],
-    width: '90%',
+    // height: '100%',
+    width: '87%',
   },
 });

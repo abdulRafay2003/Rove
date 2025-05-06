@@ -1,73 +1,80 @@
 import httpService from '../https.service';
 
-// NEW
-const getBlogs = () => {
-  return httpService().get('blogs');
+// New Endpoints for ROVE
+const getUserData = () => {
+  return httpService().get(`accounts/profile/`);
+};
+const updateUser = (body: any) => {
+  return httpService('multipart/form-data').put(`accounts/profile/`, body);
 };
 
-const liveSessions = () => {
-  return httpService().get('events');
+const getTrustedContacts = () => {
+  return httpService().get('accounts/trusted-contacts/');
 };
 
-const getQuestions = () => {
-  return httpService().get('questions');
+const editTrustedContact = (id: any, body: any) => {
+  return httpService().put(`accounts/trusted-contacts/${id}/`, body);
 };
 
-const getUserServices = () => {
-  return httpService().get('user/services');
+const deleteTrustedContact = (id: any) => {
+  return httpService().delete(`accounts/trusted-contacts/${id}/`);
 };
 
-const createUserServices = (body: object) => {
-  return httpService().post('user/services', body);
+const addTrustedContact = (body: any) => {
+  return httpService().post('accounts/trusted-contacts/', body);
 };
 
-const userServiceDoc = (body: object) => {
-  return httpService('multipart/form-data').post(
-    'user/service/documents',
-    body,
-  );
+const getAgoraToken = (body: any) => {
+  return httpService().post('accounts/fetch-rtc-token/', body);
 };
 
-const getServices = () => {
-  return httpService().get('services');
+const postMsg = (body: any) => {
+  return httpService().post('accounts/stream/send-msg/', body);
 };
 
-const getLeads = () => {
-  return httpService().get('leads');
+const createSafeZones = (body: any) => {
+  return httpService().post('accounts/safezones/', body);
 };
 
-const createLeads = (body: object) => {
-  return httpService().post('leads', body);
+const getSafeZones = () => {
+  return httpService().get('accounts/safezones/');
 };
 
-const getUserQuestions = () => {
-  return httpService().get('user/questions');
+const deleteSafeZone = (id: any) => {
+  return httpService().delete(`accounts/safezones/${id}/`);
 };
 
-const createUserQuestions = (body: object) => {
-  return httpService().post('user/questions', body);
+const postIncidents = (body: any) => {
+  return httpService().post('incidents/incidents/', body);
 };
 
-const editProfile = (body: object) => {
-  return httpService().post('me/update', body);
+const getIncidents = () => {
+  return httpService().get('incidents/incidents/');
 };
 
-const deleteuser = () => {
-  return httpService().delete('delete');
+const deleteIncident = (id: any) => {
+  return httpService().delete(`incidents/incidents/${id}/`);
+};
+
+const getIncidentDetail = (id: any) => {
+  return httpService().get(`incidents/incidents/${id}/`);
 };
 
 export const HomeAPIS = {
-  getBlogs,
-  liveSessions,
-  getQuestions,
-  getServices,
-  getUserServices,
-  createUserServices,
-  userServiceDoc,
-  getLeads,
-  createLeads,
-  getUserQuestions,
-  createUserQuestions,
-  editProfile,
-  deleteuser,
+  // New Endpoints
+  getTrustedContacts,
+  addTrustedContact,
+  getUserData,
+  updateUser,
+  getAgoraToken,
+  postMsg,
+  editTrustedContact,
+  deleteTrustedContact,
+  createSafeZones,
+  getSafeZones,
+  deleteSafeZone,
+  postIncidents,
+  getIncidents,
+  deleteIncident,
+  getIncidentDetail,
 };

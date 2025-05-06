@@ -32,6 +32,7 @@ export const ScrollableContainer: React.FC<ScrollableContainerProps> = ({
         backgroundColor={'#ffffff'}
       />
       <ScrollView
+      showsVerticalScrollIndicator={false}
         style={[styles.container, customeStyle]}
         keyboardShouldPersistTaps="handled">
         {children}

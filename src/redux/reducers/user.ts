@@ -6,11 +6,13 @@ import Action from '../actions/Auth';
 interface AppState {
   authorize: boolean;
   langChange: boolean;
+  isFirstTime: boolean;
 }
 
 const initialState: ImmutableObject<AppState> = Immutable<AppState>({
   authorize: false,
   langChange: false,
+  isFirstTime: false,
 });
 
 export default (state = initialState, action: {type: any; payload: any}) => {
@@ -27,6 +29,12 @@ export default (state = initialState, action: {type: any; payload: any}) => {
     case Action.CHANGE_ROUTE_ON_LANG: {
       return Immutable(state).merge({
         langChange: action.payload,
+      });
+    }
+
+    case Action.FIRST_TIME: {
+      return Immutable(state).merge({
+        isFirstTime: action.payload,
       });
     }
 

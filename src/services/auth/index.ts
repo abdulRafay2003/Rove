@@ -1,58 +1,39 @@
 import httpService from '../https.service';
 
 const userLogin = (body: object) => {
-  return httpService().post('auth/login', body);
+  return httpService().post('_allauth/app/v1/auth/login', body);
+};
+
+const getAccessToken = (body: object) => {
+  return httpService().post('api/auth/token/', body);
 };
 
 const userSignup = (body: object) => {
-  return httpService().post('auth/registration', body);
+  return httpService().post('_allauth/app/v1/auth/signup', body);
 };
 
-const setOTP = (body: object) => {
-  return httpService().patch('auth/verification', body);
+const googleLogin = (body: object) => {
+  return httpService().post('accounts/api/google-sign-in/', body);
 };
 
-const setResetPasswordOtp = (body: object) => {
-  return httpService().post('auth/resetPasswordVerificaton', body);
-};
-const setResetPassword = (body: object) => {
-  return httpService().post('auth/reset-password', body);
+const sendOtp = (body: object) => {
+  return httpService().post('accounts/otp/generate-otp/', body);
 };
 
-const getMe = () => {
-  return httpService().get('me');
+const verifyOtp = (body: object) => {
+  return httpService().post('accounts/otp/verify-otp/', body);
 };
 
-const onBoardingApi = (body: object) => {
-  return httpService().post('auth/onboard', body);
-};
-
-const setForgotPasswordApi = (body: object) => {
-  return httpService().post('auth/forgot-password', body);
-};
-
-const setResedPasswordApi = (body: object) => {
-  return httpService().post('auth/resendOtp', body);
-};
-
-const setUpdateProfileAPI = (body: object) => {
-  return httpService().post('auth/updateProfile', body);
-};
-
-const updateFcm = (body: object) => {
-  return httpService().post('fcm-token/create', body);
+const resendOTP = (body: object) => {
+  return httpService().post('accounts/otp/resend-otp/', body);
 };
 
 export const AuthAPIS = {
   userLogin,
+  getAccessToken,
   userSignup,
-  setOTP,
-  onBoardingApi,
-  getMe,
-  setForgotPasswordApi,
-  setResetPasswordOtp,
-  setResetPassword,
-  setResedPasswordApi,
-  setUpdateProfileAPI,
-  updateFcm,
+  googleLogin,
+  sendOtp,
+  resendOTP,
+  verifyOtp,
 };

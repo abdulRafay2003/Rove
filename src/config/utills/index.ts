@@ -39,23 +39,22 @@ function showToast(
   visibilityTime?: number,
 ) {
   let err = error?.msg;
-  console.log('inshowtoast-----', err, message);
-
+  // console.log('inshowtoast-----', err, message);
   if (err === 'timeout of 10000ms exceeded') {
     Toast.show({
       text1: 'Connectivity Issue',
-      bottomOffset: Platform.OS === 'android' ? 10 : 25,
+      bottomOffset: Platform.OS === 'android' ? 10 : 30,
       type: status || 'info',
       visibilityTime: visibilityTime || 2000,
-      position: 'bottom',
+      position: 'top',
     });
   } else if (err === 'Network Error') {
     Toast.show({
       text1: 'You have lost internet connection',
       type: status || 'info',
-      bottomOffset: Platform.OS === 'android' ? 10 : 25,
+      bottomOffset: Platform.OS === 'android' ? 10 : 30,
       visibilityTime: visibilityTime || 2000,
-      position: 'bottom',
+      position: 'top',
     });
   } else if (message === 'Login to access') {
     const clear = async () => {
@@ -63,23 +62,22 @@ function showToast(
       await AsyncStorage.setItem('userData', '');
       await AsyncStorage.removeItem('userData');
       await DataHandler.getStore().dispatch(AuthActions.loginSuccess(false));
-      console.log('first');
     };
     clear();
     Toast.show({
       text1: 'User does not exist',
       type: status || 'info',
-      bottomOffset: Platform.OS === 'android' ? 10 : 25,
+      bottomOffset: Platform.OS === 'android' ? 10 : 30,
       visibilityTime: visibilityTime || 2000,
-      position: 'bottom',
+      position: 'top',
     });
   } else {
     Toast.show({
       text1: message || 'Something Went Wrong',
-      bottomOffset: Platform.OS === 'android' ? 10 : 25,
+      bottomOffset: Platform.OS === 'android' ? 10 : 30,
       type: status || 'info',
-      visibilityTime: visibilityTime || 2000,
-      position: 'bottom',
+      visibilityTime: visibilityTime || 3000,
+      position: 'top',
     });
   }
 }

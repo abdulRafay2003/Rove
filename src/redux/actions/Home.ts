@@ -3,8 +3,10 @@ export default class Action {
   static EMPTY_STATE_SUCCESS = 'EMPTY_STATE_SUCCESS';
   static IS_DARK_MODE = 'IS_DARK_MODE';
   static USER_DETAILS = 'USER_DETAILS';
-  static FCM_TOKEN = 'FCM_TOKEN';
-  static USER_CITY = 'USER_CITY';
+  static SAFE_WORD = 'SAFE_WORD';
+  static USER_LOCATION = 'USER_LOCATION';
+  static SELECTED_MODEL = 'SELECTED_MODEL';
+  static IN_SAFE_ZONE = 'IN_SAFE_ZONE';
 
   //Actions
   static setDarkMode() {
@@ -12,6 +14,7 @@ export default class Action {
       type: Action.IS_DARK_MODE,
     };
   }
+
   static setUserDetails(payload: any) {
     return {
       type: Action.USER_DETAILS,
@@ -19,15 +22,30 @@ export default class Action {
     };
   }
 
-  static setFcm(payload: any) {
+  static setSafeWord(payload: any) {
     return {
-      type: Action.FCM_TOKEN,
+      type: Action.SAFE_WORD,
       payload,
     };
   }
-  static setUserCity(payload: any) {
+
+  static setUserLocation(payload: any) {
     return {
-      type: Action.USER_CITY,
+      type: Action.USER_LOCATION,
+      payload,
+    };
+  }
+
+  static setSelectedModel(payload: any) {
+    return {
+      type: Action.SELECTED_MODEL,
+      payload,
+    };
+  }
+
+  static setInSafeZone(payload: any) {
+    return {
+      type: Action.IN_SAFE_ZONE,
       payload,
     };
   }
