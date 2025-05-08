@@ -137,11 +137,11 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({}) => {
     setLoading(true);
     AuthAPIS.userLogin(body)
       .then(res => {
-        // console.log('Logging login ovject', res?.data?.data?.user);
+        console.log('Logging login ovject', res);
         getToken(body, res?.data?.data?.user);
       })
       .catch(err => {
-        console.log('Err', err?.data?.errors);
+        console.log('Err', err);
         Utills.showToast(err?.response?.data?.errors?.[0]?.message);
         setLoading(false);
       });
@@ -150,7 +150,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({}) => {
   const getToken = (body: Object, obj: any) => {
     AuthAPIS.getAccessToken(body)
       .then(res => {
-        // console.log('Res Token', res?.data);
+        console.log('Res Token', res?.data);
         dispatch(
           HomeActions.setUserDetails({
             user: obj,
@@ -162,7 +162,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({}) => {
         dispatch(AuthActions.loginSuccess(true));
       })
       .catch(err => {
-        // console.log('Err', err?.data?.errors?.[0]?.message);
+        console.log('Err token', err);
         Utills.showToast(err?.response?.data?.errors?.[0]?.message);
         setLoading(false);
       });

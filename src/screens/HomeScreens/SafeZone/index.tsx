@@ -114,7 +114,7 @@ export const SafeZone: React.FC<SafeZoneProps> = ({}) => {
 
   const fetchPlaces = async (lat: any, lng: any, type: any) => {
     const response = await fetch(
-      `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${lat},${lng}&radius=5000&type=${type}&key=AIzaSyBcOBbH59pgJk_bmN6WavZCExwCGqCztaY`,
+      `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${lat},${lng}&radius=5000&type=${type}&key=AIzaSyCRszURtItQpdkINBuT0XzWXyu8Vxsg2Ho`,
     );
     const data = await response.json();
     let array: any = [];
@@ -508,7 +508,7 @@ export const SafeZone: React.FC<SafeZoneProps> = ({}) => {
             keepResultsAfterBlur={true}
             enableHighAccuracyLocation={true}
             query={{
-              key: 'AIzaSyBcOBbH59pgJk_bmN6WavZCExwCGqCztaY',
+              key: 'AIzaSyCRszURtItQpdkINBuT0XzWXyu8Vxsg2Ho',
               language: 'en',
             }}
             textInputProps={{
@@ -602,7 +602,7 @@ export const SafeZone: React.FC<SafeZoneProps> = ({}) => {
             keepResultsAfterBlur={false}
             enableHighAccuracyLocation={true}
             query={{
-              key: 'AIzaSyBcOBbH59pgJk_bmN6WavZCExwCGqCztaY',
+              key: 'AIzaSyCRszURtItQpdkINBuT0XzWXyu8Vxsg2Ho',
               language: 'en',
             }}
             textInputProps={{

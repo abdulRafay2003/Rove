@@ -20,7 +20,7 @@ const initialState: ImmutableObject<AppState> = Immutable<AppState>({
   },
   userLocation: {},
   selectedModel:
-    'ws://awseb--AWSEB-f4xm0MtNeYRI-371792584.ca-central-1.elb.amazonaws.com/ws/audio',
+    'wss://threat-detection-gcp-917390125611.us-central1.run.app/ws/audio',
   isFirstTime: false,
   isSafeZone: false,
 });

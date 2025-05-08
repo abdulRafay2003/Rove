@@ -101,7 +101,7 @@ export const RegisterScreen: React.FC<RegisterScreenProps> = ({}) => {
         getToken(body, res?.data?.data?.user);
       })
       .catch(err => {
-        console.log('Err', err.response?.data);
+        console.log('Err', err);
         setLoading(false);
       });
   };
@@ -120,7 +120,7 @@ export const RegisterScreen: React.FC<RegisterScreenProps> = ({}) => {
         otpGenerate(phoneNo);
       })
       .catch(err => {
-        console.log('Err', err?.data?.errors?.[0]?.message);
+        console.log('Err', err);
         Utills.showToast(err?.response?.data?.errors?.[0]?.message);
         setLoading(false);
       });

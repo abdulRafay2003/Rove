@@ -100,7 +100,7 @@ export const LiveStream: React.FC<LiveStreamProps> = ({}) => {
     (state: RootState) => state.home.userLocation,
   );
 
-  console.log('Recorder====Recorder2====', recorder, recorder2);
+  // console.log('Recorder====Recorder2====', recorder, recorder2);
 
   const headerOptions = [
     {

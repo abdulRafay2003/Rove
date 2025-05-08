@@ -179,10 +179,10 @@ export const TabStack: React.FC = ({}) => {
     };
 
     socket.onmessage = event => {
+      console.log('Message from server:', event.data);
       const parsedData = JSON.parse(event.data);
       const isThreat = parsedData.threat_detected;
       const isNegativeSentiment = parsedData?.sentiment == 'negative';
-      console.log('Message from server:', parsedData);
       if (currentModel == Environments.Models.WHISPER_AND_SENTIMENT) {
         if (isNegativeSentiment) {
           console.log(

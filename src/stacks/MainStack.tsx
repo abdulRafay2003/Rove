@@ -35,6 +35,7 @@ export const MainStack = () => {
           ...TransitionPresets.DefaultTransition,
         }}>
         {authorize ? HomeScreens : AuthScreens}
+        {/* {HomeScreens} */}
       </MainStack.Navigator>
     </>
   );
